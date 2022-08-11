@@ -50,6 +50,7 @@ export const FormikForm = () => {
         "Content-type": "application/json",
       },
     }).then((res) => res.json());
+    alert("Yay!, Data Stored");
   };
 
   function Calculate() {
