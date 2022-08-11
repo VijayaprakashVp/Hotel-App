@@ -1,0 +1,37 @@
+[
+  {
+    "key": "Item name",
+    "value": "",
+    "option": false,
+    "selectOption": []
+  },
+  {
+    "key": "Category",
+    "value": "--",
+    "selectOption": ["Protein", "Grains", "Snacks"]
+  },
+  {
+    "key": "Sub category",
+    "value": "--",
+    "option": true,
+    "selectOption": ["Sea Foods", "Nuts", "Pizza"]
+  },
+  {
+    "key": "Units",
+    "value": "Kgs",
+    "option": true,
+    "selectOption": []
+  },
+  {
+    "key": "Net wt.",
+    "value": "0000",
+    "option": false,
+    "selectOption": []
+  },
+  {
+    "key": "Max order quantity",
+    "value": "0000",
+    "option": false,
+    "selectOption": []
+  }
+]

@@ -1,0 +1,36 @@
+[
+  { "name": "Dashboard", "userType": "user", "subdata": [] },
+  { "name": "Notifications", "userType": "user", "subdata": [] },
+  {
+    "name": "Customer",
+    "userType": "user",
+    "subdata": [
+      {
+        "name": "Postpay",
+        "data": [
+          { "val": "nett 7 days" },
+          { "val": "nett 15 days" },
+          { "val": "nett 30 days" },
+          { "val": "nett 45 days" },
+          { "val": "nett 60 days" }
+        ]
+      },
+      {
+        "name": "Prepaid",
+        "data": []
+      }
+    ]
+  },
+  { "name": "Employee masters", "userType": "user", "subdata": [] },
+  { "name": "Users and access", "userType": "user", "subdata": [] },
+  { "name": "Master rate card", "userType": "user", "subdata": [] },
+  { "name": "Stock points", "userType": "user", "subdata": [] },
+  { "name": "Vehicle master", "userType": "user", "subdata": [] },
+  { "name": "payment tally", "userType": "user", "subdata": [] },
+  { "name": "Payment history", "userType": "user", "subdata": [] },
+  {
+    "name": "Settings",
+    "userType": "user",
+    "subdata": [{ "name": "Log history", "data": [] }]
+  }
+]
