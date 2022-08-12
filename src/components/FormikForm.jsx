@@ -15,7 +15,7 @@ import { HeadingText } from "./HeadingText";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { InputComp } from "./InputComp";
-import { postUrl } from "../Urls/index";
+import { postUrl } from "../Utils/index";
 
 export const FormikForm = () => {
   const formik = useFormik({
