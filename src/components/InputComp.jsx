@@ -3,7 +3,7 @@ import React from "react";
 import { useFormik } from "formik";
 
 export const InputComp = (...props) => {
-  const formik = useFormik();
+  const formik = useFormik({});
   return (
     <div>
       <Stack spacing={3}>

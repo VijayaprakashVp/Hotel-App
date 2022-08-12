@@ -15,6 +15,7 @@ import { HeadingText } from "./HeadingText";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { InputComp } from "./InputComp";
+import { postUrl } from "../Urls/index";
 
 export const FormikForm = () => {
   const formik = useFormik({
@@ -42,15 +43,16 @@ export const FormikForm = () => {
   });
 
   const handleRequest = () => {
-    let url = `https://crudcrud.com/api/f8d21e5a020f4b00a0d3ab7a6c164067/data`;
-
-    fetch(url, {
+    // console.log("postUrl:", postUrl);
+    fetch(postUrl, {
       method: "POST",
       body: JSON.stringify(formik.values),
       headers: {
         "Content-type": "application/json",
       },
-    }).then((res) => res.json());
+    })
+      .then((res) => res.json())
+      .catch((err) => console.log(err));
     alert("Yay!, Data Stored");
   };
 
