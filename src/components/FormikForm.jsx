@@ -14,28 +14,29 @@ import { ButtonComp } from "./ButtonComp";
 import { HeadingText } from "./HeadingText";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { InputComp } from "./InputComp";
 
 export const FormikForm = () => {
   const formik = useFormik({
     initialValues: {
-      item_name: "",
+      itemName: "",
       cgst: "0%",
       sgst: "0%",
       category: "",
-      qty: "",
-      sub_category: "",
-      tax_type: "",
+      quantity: "",
+      subCategory: "",
+      taxType: "",
       basePrice: 0,
       finalPrice: 0,
     },
     validationSchema: Yup.object({
-      item_name: Yup.string()
+      itemName: Yup.string()
         .max(15, "Item name should be 15 or less characters")
         .required("required"),
-      qty: Yup.number()
+      quantity: Yup.number()
         .moreThan(0, "Please Enter 1 or More Quantity")
         .required("required"),
-      tax_type: Yup.string().required("required"),
+      taxType: Yup.string().required("required"),
       basePrice: Yup.number().moreThan(0, "Please Enter the Base Price"),
     }),
   });
@@ -62,57 +63,50 @@ export const FormikForm = () => {
     let percentage2 = formik.values.cgst;
     cgst = percentage2.split("%");
     cgst = +cgst[0];
+    let gst = cgst + sgst;
 
-    if (formik.values.tax_type === "exclusive") {
-      if (
-        formik.values.item_name !== "" &&
-        formik.values.qty !== "" &&
-        formik.values.tax_type !== "" &&
-        formik.values.sgst !== "" &&
-        formik.values.cgst !== "" &&
-        formik.values.basePrice !== ""
-      ) {
-        let tem1 = (+formik.values.basePrice * sgst) / 100;
-        let tem2 = (+formik.values.basePrice * cgst) / 100;
-        let final = +formik.values.basePrice + (+tem1 + +tem2);
-        final.toFixed(2);
-        formik.values.finalPrice = final;
-      }
-    } else if (formik.values.tax_type === "inclusive") {
-      if (
-        formik.values.item_name !== "" &&
-        formik.values.qty !== "" &&
-        formik.values.tax_type !== "" &&
-        formik.values.sgst !== "" &&
-        formik.values.cgst !== "" &&
-        formik.values.finalPrice !== ""
-      ) {
-        let tem1 =
-          +formik.values.finalPrice -
-          +formik.values.finalPrice * (100 / (100 + sgst));
-        let tem2 =
-          +formik.values.finalPrice -
-          +formik.values.finalPrice * (100 / (100 + cgst));
-
-        let temp = formik.values.finalPrice - tem1 - tem2;
-        formik.values.basePrice = temp.toFixed(2);
+    if (
+      formik.values.itemName !== "" &&
+      formik.values.quantity !== "" &&
+      formik.values.taxType !== "" &&
+      formik.values.sgst !== "" &&
+      formik.values.cgst !== "" &&
+      (formik.values.basePrice !== "" || formik.values.basePrice !== "")
+    ) {
+      if (formik.values.taxType === "exclusive") {
+        let gstCalculation = (+formik.values.basePrice * gst) / 100;
+        let final = +formik.values.basePrice + gstCalculation;
+        formik.values.finalPrice = final.toFixed(2);
+      } else if (formik.values.taxType === "inclusive") {
+        let reverseCalculation = reverseCalculationFunction(
+          formik.values.finalPrice,
+          gst
+        );
+        formik.values.basePrice = reverseCalculation.toFixed(2);
       }
     }
   }
+
+  function reverseCalculationFunction(finalPrice, gst) {
+    let gstCalculation = finalPrice - finalPrice * (100 / (100 + gst));
+    gstCalculation = finalPrice - gstCalculation;
+    return gstCalculation;
+  }
+
   let flag = 0;
   if (
-    formik.values.item_name !== "" &&
-    formik.values.qty !== "" &&
+    formik.values.itemName !== "" &&
+    formik.values.quantity !== "" &&
     formik.values.sgst !== "" &&
     formik.values.cgst !== "" &&
-    (formik.values.tax_type === "exclusive" ||
-      formik.values.tax_type === "inclusive")
+    (formik.values.taxType === "exclusive" ||
+      formik.values.taxType === "inclusive")
   )
     flag = 1;
   useEffect(() => {
     if (
-      formik.values.tax_type === "exclusive" ||
-      formik.values.tax_type === "inclusive"
+      formik.values.taxType === "exclusive" ||
+      formik.values.taxType === "inclusive"
     )
       Calculate();
   }, [flag, formik.values, formik.values.basePrice, formik.values.finalPrice]);
@@ -131,17 +125,22 @@ export const FormikForm = () => {
               <InputLeftAddon children='Item name' bg={"none"} />
               <Input
                 type='text'
-                name='item_name'
+                name='itemName'
                 backgroundColor={"none"}
                 textAlign={"center"}
-                value={formik.values.item_name}
+                value={formik.values.itemName}
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
               />
             </InputGroup>
-            {formik.touched.item_name && formik.errors.item_name ? (
+            {/* <InputComp
+              children='Item name'
+              inputname='itemvalue'
+              inputvalue='formik.values.itemName'
+            /> */}
+            {formik.touched.itemName && formik.errors.itemName ? (
               <Text color={"red"} ml={"45%"}>
-                {formik.errors.item_name}
+                {formik.errors.itemName}
               </Text>
             ) : (
               ""
@@ -173,8 +172,8 @@ export const FormikForm = () => {
                   placeholder='--'
                   borderTopLeftRadius={"0px"}
                   borderBottomLeftRadius={"0px"}
-                  name='sub_category'
-                  value={formik.values.sub_category}
+                  name='subCategory'
+                  value={formik.values.subCategory}
                   onBlur={formik.handleBlur}
                   onChange={formik.handleChange}>
                   <option value='snack'>Snack</option>
@@ -202,15 +201,15 @@ export const FormikForm = () => {
                   type='text'
                   placeholder='00000'
                   textAlign={"center"}
-                  name='qty'
-                  value={formik.values.qty}
+                  name='quantity'
+                  value={formik.values.quantity}
                   onBlur={formik.handleBlur}
                   onChange={formik.handleChange}
                 />
               </InputGroup>
-              {formik.touched.qty && formik.errors.qty ? (
+              {formik.touched.quantity && formik.errors.quantity ? (
                 <Text color={"red"} ml={"45%"}>
-                  {formik.errors.qty}
+                  {formik.errors.quantity}
                 </Text>
               ) : (
                 ""
@@ -231,8 +230,8 @@ export const FormikForm = () => {
                   placeholder='Select'
                   borderTopLeftRadius={"0px"}
                   borderBottomLeftRadius={"0px"}
-                  name='tax_type'
-                  value={formik.values.tax_type}
+                  name='taxType'
+                  value={formik.values.taxType}
                   onBlur={formik.handleBlur}
                   onChange={formik.handleChange}>
                   <option value='inclusive'>Inclusive</option>
@@ -240,9 +239,9 @@ export const FormikForm = () => {
                   <option value='exempted'>Exempted</option>
                 </Select>
               </InputGroup>
-              {formik.touched.tax_type && formik.errors.tax_type ? (
+              {formik.touched.taxType && formik.errors.taxType ? (
                 <Text color={"red"} ml={"45%"}>
-                  {formik.errors.tax_type}
+                  {formik.errors.taxType}
                 </Text>
               ) : (
                 ""
@@ -253,7 +252,7 @@ export const FormikForm = () => {
             <Box fontWeight={"bold"} fontSize={"14px"}>
               Code
             </Box>
-            {formik.values.tax_type !== "exempted" ? (
+            {formik.values.taxType !== "exempted" ? (
               <Box display={"grid"} gridTemplateColumns={"70% 25%"} gap={"5%"}>
                 <Box>
                   <InputGroup>
@@ -341,7 +340,7 @@ export const FormikForm = () => {
                       type='number'
                       name='basePrice'
                       placeholder='0000'
-                      disabled={formik.values.tax_type === "inclusive"}
+                      disabled={formik.values.taxType === "inclusive"}
                       value={formik.values.basePrice}
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
@@ -357,7 +356,7 @@ export const FormikForm = () => {
                       name='finalPrice'
                       placeholder='0000'
                       textAlign={"center"}
-                      disabled={formik.values.tax_type === "exclusive"}
+                      disabled={formik.values.taxType === "exclusive"}
                       value={
                         formik.values.finalPrice !== ""
                           ? formik.values.finalPrice
