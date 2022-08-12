@@ -87,9 +87,15 @@ export const FormikForm = () => {
         formik.values.cgst !== "" &&
         formik.values.finalPrice !== ""
       ) {
-        let tem1 = (+formik.values.finalPrice * sgst) / 100;
-        let tem2 = (+formik.values.finalPrice * cgst) / 100;
-        formik.values.basePrice = formik.values.finalPrice - tem1 - tem2;
+        let tem1 =
+          +formik.values.finalPrice -
+          +formik.values.finalPrice * (100 / (100 + sgst));
+        let tem2 =
+          +formik.values.finalPrice -
+          +formik.values.finalPrice * (100 / (100 + cgst));
+
+        let temp = formik.values.finalPrice - tem1 - tem2;
+        formik.values.basePrice = temp.toFixed(2);
       }
     }
   }
