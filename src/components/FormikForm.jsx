@@ -16,6 +16,8 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { InputComp } from "./InputComp";
 import { postUrl } from "../Utils/index";
+import * as reducer from "../Redux/Actions/index";
+import { useDispatch } from "react-redux";
 
 export const FormikForm = () => {
   const formik = useFormik({
@@ -41,6 +43,9 @@ export const FormikForm = () => {
       basePrice: Yup.number().moreThan(0, "Please Enter the Base Price"),
     }),
   });
+
+  const { postFetch } = reducer;
+  const dispatch = useDispatch();
 
   const handleRequest = () => {
     // console.log("postUrl:", postUrl);
@@ -388,7 +393,7 @@ export const FormikForm = () => {
               bgColor='#18B83B'
               color={"white"}
               width='20%'
-              onClick={handleRequest}>
+              onClick={() => dispatch(postFetch(formik.values))}>
               Save item
             </Button>
           </Box>
