@@ -3,7 +3,7 @@ import React from "react";
 import { useFormik } from "formik";
 
 export const InputComp = (props) => {
-  console.log("props:", props);
+  // console.log("props:", props);
   const formik = useFormik({});
   return (
     <div>
