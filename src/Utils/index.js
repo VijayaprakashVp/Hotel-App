@@ -1,1 +1,1 @@
-export let postUrl = `https://crudcrud.com/api/f8d21e5a020f4b00a0d3ab7a6c164067/data`;
+export let postUrl = `https://62fb36f6abd610251c035f39.mockapi.io/hotelapp`;
