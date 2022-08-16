@@ -10,12 +10,11 @@ import {
 } from "@chakra-ui/react";
 import React from "react";
 import { useEffect } from "react";
-import { ButtonComp } from "./ButtonComp";
 import { HeadingText } from "./HeadingText";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { InputComp } from "./InputComp";
-import { postUrl } from "../Utils/index";
+// import { postUrl } from "../Utils/index";
 import * as reducer from "../Redux/Actions/index";
 import { useDispatch } from "react-redux";
 
@@ -47,19 +46,19 @@ export const FormikForm = () => {
   const { postFetch } = reducer;
   const dispatch = useDispatch();
 
-  const handleRequest = () => {
-    // console.log("postUrl:", postUrl);
-    fetch(postUrl, {
-      method: "POST",
-      body: JSON.stringify(formik.values),
-      headers: {
-        "Content-type": "application/json",
-      },
-    })
-      .then((res) => res.json())
-      .catch((err) => console.log(err));
-    alert("Yay!, Data Stored");
-  };
+  // const handleRequest = () => {
+  //   // console.log("postUrl:", postUrl);
+  //   fetch(postUrl, {
+  //     method: "POST",
+  //     body: JSON.stringify(formik.values),
+  //     headers: {
+  //       "Content-type": "application/json",
+  //     },
+  //   })
+  //     .then((res) => res.json())
+  //     .catch((err) => console.log(err));
+  //   alert("Yay!, Data Stored");
+  // };
 
   function Calculate() {
     let sgst;
