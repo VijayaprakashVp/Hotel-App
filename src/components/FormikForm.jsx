@@ -19,6 +19,8 @@ import { useDispatch } from "react-redux";
 import { SelectInput } from "./SelectInput";
 
 export const FormikForm = () => {
+  var GSTPercentageArray = ["0%", "5%", "8%", " 18%", "28%"];
+
   const formik = useFormik({
     initialValues: {
       itemName: "",
@@ -105,16 +107,20 @@ export const FormikForm = () => {
   }, [flag, formik.values, formik.values.basePrice, formik.values.finalPrice]);
 
   return (
-    <div>
+    <>
       <Container maxWidth={"5xl"}>
         <Box paddingLeft={"2%"} paddingRight={"10%"} h={"700px"}>
           <Box textAlign={"center"}>
             <HeadingText
+              weight={"400"}
               title='Master rate card form'
               size='32px'></HeadingText>
           </Box>
           <Box display={"grid"} gridTemplateColumns={"49%"}>
-            <HeadingText title='Item details' size='24px'></HeadingText>
+            <HeadingText
+              title='Item details'
+              size='24px'
+              weight={"400"}></HeadingText>
             <InputComp
               name={"itemName"}
               value={formik.values.itemName}
@@ -175,7 +181,10 @@ export const FormikForm = () => {
             </Box>
           </Box>
           <Box mt={"15px"}>
-            <HeadingText title='Pricing details' size='24px'></HeadingText>
+            <HeadingText
+              title='Pricing details'
+              size='24px'
+              weight={"400"}></HeadingText>
           </Box>
           <Box>
             <Box mt={"15px"} fontWeight={"bold"}>
@@ -211,14 +220,14 @@ export const FormikForm = () => {
                     formik={formik}
                     value={formik.values.sgst}
                     name={"sgst"}
-                    arr={["0%", "5%", "8%", " 18%", "28%"]}></SelectInput>
+                    arr={GSTPercentageArray}></SelectInput>
                   <SelectInput
                     keys={"CGST"}
                     placeholder={"--"}
                     formik={formik}
                     value={formik.values.cgst}
                     name={"cgst"}
-                    arr={["0%", "5%", "8%", " 18%", "28%"]}></SelectInput>
+                    arr={GSTPercentageArray}></SelectInput>
                 </Box>
                 <Box mt={"5px"}>
                   <Box>
@@ -294,6 +303,7 @@ export const FormikForm = () => {
               fontWeight='700'
               fontSize='12px'
               width='90px'
+              bg={"none"}
               color='#18B83B'
               border='1px solid #18B83B'>
               Add variant
@@ -310,6 +320,6 @@ export const FormikForm = () => {
           </Box>
         </Box>
       </Container>
-    </div>
+    </>
   );
 };

@@ -1,18 +1,18 @@
 import { Button } from "@chakra-ui/react";
 
-export const ButtonComp = ({ Children, color, widthL }) => {
+export const ButtonComp = (props) => {
   return (
     <Button
-      w={widthL}
+      w={props.widthL}
       height={"48px"}
       borderRadius={"8px"}
-      bgColor={color}
+      bgColor={props.color}
       fontSize={"16px"}
       border={"none"}
       fontWeight={700}
       lineHeight={"24px"}
       color={"white"}>
-      {Children}
+      {props.Children}
     </Button>
   );
 };

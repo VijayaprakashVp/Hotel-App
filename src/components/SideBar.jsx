@@ -11,14 +11,15 @@ import React from "react";
 import { ButtonComp } from "./ButtonComp";
 import data from "../data/Sidebar.json";
 
-export const LeftMenu = () => {
+export const SideBar = () => {
   return (
-    <Box display={{ sm: "none", lg: "block" }}>
+    <Box>
       <Box
         bgColor={"#373737"}
         display={"flex"}
         flexDirection={"column"}
-        p={"5% 0% 9% 10%"}>
+        pl={"7%"}
+        pt={"5%"}>
         <Box display={"flex"} flexDirection={"column"} gap={"20px"}>
           <ButtonComp
             Children={"Add Cutomer"}
@@ -37,11 +38,9 @@ export const LeftMenu = () => {
           dispaly='flex'
           justifyContent='center'>
           {data.map((item, index) => (
-            <Box mt='15px' key={item.name}>
+            <Box mt='15px' key={"menu-item" + index}>
               <Text
-                fontSize={"16px"}
                 color='#ffff'
-                key={index}
                 mb='4px'
                 textAlign='left'
                 ml='30px'
@@ -54,7 +53,7 @@ export const LeftMenu = () => {
                     defaultIndex={[1]}
                     allowMultiple
                     color='white'
-                    key={ele.name}>
+                    key={index}>
                     <AccordionItem borderStyle='none'>
                       <h2>
                         <AccordionButton>
@@ -66,10 +65,10 @@ export const LeftMenu = () => {
                         pb={4}
                         d='flex'
                         flexDirection='column'
-                        ml={20}>
+                        ml={10}>
                         {ele.data.map((item) => {
                           return (
-                            <Text pr={4} mt={1} key={item.val}>
+                            <Text pr={4} mt={1} key={item}>
                               {item.val}
                             </Text>
                           );
@@ -85,16 +84,3 @@ export const LeftMenu = () => {
     </Box>
   );
 };
-
-// if (e.AdditionalData.length > 0) {
-//   console.log("e.AdditionalData", e.AdditionalData);
-//   {
-//     e.AdditionalData.map((item) => {
-//       if (item.name !== undefined) console.log("eachitem:", item.name);
-//       <p>{item.name}</p>;
-//       item.data.map((eachItem) => {
-//         console.log("eachInnItem", eachItem.name);
-//       });
-//     });
-//   }
-// }

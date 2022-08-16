@@ -1,14 +1,14 @@
 import { Box, Grid, GridItem } from "@chakra-ui/react";
 import React from "react";
 import { FormikForm } from "./FormikForm";
-import { HeaderImage } from "./HeaderImage";
+import { Header } from "./Header";
 import { LeftMenu } from "./LeftMenu";
 
 export const Home = () => {
   return (
-    <div>
+    <>
       <Box>
-        <HeaderImage />
+        <Header />
         <Box>
           <Grid templateColumns='20% 78%' gap={4}>
             <GridItem>
@@ -22,6 +22,6 @@ export const Home = () => {
           </Grid>
         </Box>
       </Box>
-    </div>
+    </>
   );
 };
