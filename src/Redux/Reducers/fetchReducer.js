@@ -7,13 +7,9 @@ const initState = {};
 const postFetchReducer = (state = initState, { type, payload }) => {
   switch (type) {
     case allAction.postFetchData: {
-      axios
-        .post(postUrl, payload)
-        .then((res) => res.json())
-        .catch((err) => console.log(err));
+      axios.post(postUrl, payload).catch((err) => console.log(err));
       alert("Yay!, Data Stored");
     }
-
     default: {
       return state;
     }

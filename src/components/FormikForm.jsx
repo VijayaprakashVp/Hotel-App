@@ -14,7 +14,6 @@ import { HeadingText } from "./HeadingText";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { InputComp } from "./InputComp";
-// import { postUrl } from "../Utils/index";
 import * as reducer from "../Redux/Actions/index";
 import { useDispatch } from "react-redux";
 import { SelectInput } from "./SelectInput";
@@ -46,20 +45,6 @@ export const FormikForm = () => {
 
   const { postFetch } = reducer;
   const dispatch = useDispatch();
-
-  // const handleRequest = () => {
-  //   // console.log("postUrl:", postUrl);
-  //   fetch(postUrl, {
-  //     method: "POST",
-  //     body: JSON.stringify(formik.values),
-  //     headers: {
-  //       "Content-type": "application/json",
-  //     },
-  //   })
-  //     .then((res) => res.json())
-  //     .catch((err) => console.log(err));
-  //   alert("Yay!, Data Stored");
-  // };
 
   function Calculate() {
     let sgst;
@@ -130,18 +115,11 @@ export const FormikForm = () => {
           </Box>
           <Box display={"grid"} gridTemplateColumns={"49%"}>
             <HeadingText title='Item details' size='24px'></HeadingText>
-            <InputGroup>
-              <InputLeftAddon children='Item name' bg={"none"} />
-              <Input
-                type='text'
-                name='itemName'
-                backgroundColor={"none"}
-                textAlign={"center"}
-                value={formik.values.itemName}
-                onBlur={formik.handleBlur}
-                onChange={formik.handleChange}
-              />
-            </InputGroup>
+            <InputComp
+              name={"itemName"}
+              value={formik.values.itemName}
+              formik={formik}
+              children='Item name'></InputComp>
             {formik.touched.itemName && formik.errors.itemName ? (
               <Text color={"red"} ml={"45%"}>
                 {formik.errors.itemName}
@@ -152,21 +130,6 @@ export const FormikForm = () => {
           </Box>
           <Box display={"grid"} gridTemplateColumns={"49% 49%"} gap={"2%"}>
             <Box mt={"2.5%"}>
-              {/* <InputGroup>
-                <InputLeftAddon children='Category' bg={"none"} />
-                <Select
-                  textAlign={"center"}
-                  placeholder='--'
-                  borderTopLeftRadius={"0px"}
-                  borderBottomLeftRadius={"0px"}
-                  name='category'
-                  value={formik.values.category}
-                  onBlur={formik.handleBlur}
-                  onChange={formik.handleChange}>
-                  <option value='food'>Food</option>
-                  <option value='stationary'>Stationary</option>
-                </Select>
-              </InputGroup> */}
               <SelectInput
                 keys={"Category"}
                 placeholder={"--"}
@@ -175,21 +138,6 @@ export const FormikForm = () => {
                 arr={["Food", "Stationary"]}></SelectInput>
             </Box>
             <Box mt={"2.5%"}>
-              {/* <InputGroup>
-                <InputLeftAddon children='Sub category' bg={"none"} />
-                <Select
-                  textAlign={"center"}
-                  placeholder='--'
-                  borderTopLeftRadius={"0px"}
-                  borderBottomLeftRadius={"0px"}
-                  name='subCategory'
-                  value={formik.values.subCategory}
-                  onBlur={formik.handleBlur}
-                  onChange={formik.handleChange}>
-                  <option value='snack'>Snack</option>
-                  <option value='pencil'>Pencil</option>
-                </Select>
-              </InputGroup> */}
               <SelectInput
                 keys={"Sub category"}
                 placeholder={"--"}
@@ -205,24 +153,18 @@ export const FormikForm = () => {
                   borderTopLeftRadius={"0px"}
                   borderBottomLeftRadius={"0px"}></Select>
               </InputGroup>
-              <InputGroup>
-                <InputLeftAddon children='Net wt.' bg={"none"} />
-                <Input type='text' placeholder='0000' textAlign={"center"} />
-              </InputGroup>
+              <InputComp
+                formik={formik}
+                placeholder={"0000"}
+                children='Net wt.'></InputComp>
             </Box>
             <Box mt={"2.5%"}>
-              <InputGroup>
-                <InputLeftAddon children='Max order Quantity' bg={"none"} />
-                <Input
-                  type='text'
-                  placeholder='00000'
-                  textAlign={"center"}
-                  name='quantity'
-                  value={formik.values.quantity}
-                  onBlur={formik.handleBlur}
-                  onChange={formik.handleChange}
-                />
-              </InputGroup>
+              <InputComp
+                formik={formik}
+                name={"quantity"}
+                placeholder={"00000"}
+                value={formik.values.quantity}
+                children='Max order Quantity'></InputComp>
               {formik.touched.quantity && formik.errors.quantity ? (
                 <Text color={"red"} ml={"45%"}>
                   {formik.errors.quantity}
@@ -240,21 +182,6 @@ export const FormikForm = () => {
               Taxes
             </Box>
             <Box mt={"10px"} display={"grid"} gridTemplateColumns={"34.5%"}>
-              {/* <InputGroup>
-                <InputLeftAddon children='Tax type*' bg={"none"} />
-                <Select
-                  placeholder='Select'
-                  borderTopLeftRadius={"0px"}
-                  borderBottomLeftRadius={"0px"}
-                  name='taxType'
-                  value={formik.values.taxType}
-                  onBlur={formik.handleBlur}
-                  onChange={formik.handleChange}>
-                  <option value='inclusive'>Inclusive</option>
-                  <option value='exclusive'>Exclusive</option>
-                  <option value='exempted'>Exempted</option>
-                </Select>
-              </InputGroup> */}
               <SelectInput
                 keys={"Tax type"}
                 placeholder={"Select"}
@@ -275,43 +202,25 @@ export const FormikForm = () => {
             <Box fontWeight={"bold"} fontSize={"14px"}>
               Code
             </Box>
-            {formik.values.taxType !== "exempted" ? (
+            {formik.values.taxType !== "Exempted" ? (
               <Box display={"grid"} gridTemplateColumns={"70% 25%"} gap={"5%"}>
                 <Box>
-                  <InputGroup>
-                    <InputLeftAddon children='SGST' bg={"none"} />
-                    <Select
-                      borderTopLeftRadius={"0px"}
-                      borderBottomLeftRadius={"0px"}
-                      name='sgst'
-                      value={formik.values.sgst}
-                      onBlur={formik.handleBlur}
-                      onChange={formik.handleChange}>
-                      <option value='0%'>0%</option>
-                      <option value='5%'>5%</option>
-                      <option value='8%'>8%</option>
-                      <option value='18%'>18%</option>
-                      <option value='28%'>28%</option>
-                    </Select>
-                  </InputGroup>
-                  <InputGroup mt={"15px"}>
-                    <InputLeftAddon children='CGST' bg={"none"} />
-                    <Select
-                      borderTopLeftRadius={"0px"}
-                      borderBottomLeftRadius={"0px"}
-                      name='cgst'
-                      value={formik.values.cgst}
-                      onBlur={formik.handleBlur}
-                      onChange={formik.handleChange}>
-                      <option value='0%'>0%</option>
-                      <option value='5%'>5%</option>
-                      <option value='8%'>8%</option>
-                      <option value='18%'>18%</option>
-                      <option value='28%'>28%</option>
-                    </Select>
-                  </InputGroup>
+                  <SelectInput
+                    keys={"SGST"}
+                    placeholder={"--"}
+                    formik={formik}
+                    value={formik.values.sgst}
+                    name={"sgst"}
+                    arr={["0%", "5%", "8%", " 18%", "28%"]}></SelectInput>
+                  <SelectInput
+                    keys={"CGST"}
+                    placeholder={"--"}
+                    formik={formik}
+                    value={formik.values.cgst}
+                    name={"cgst"}
+                    arr={["0%", "5%", "8%", " 18%", "28%"]}></SelectInput>
                 </Box>
-                <Box>
+                <Box mt={"5px"}>
                   <Box>
                     <InputGroup>
                       <Input
@@ -323,7 +232,7 @@ export const FormikForm = () => {
                         }
                       />
                     </InputGroup>
-                    <InputGroup mt={"15px"}>
+                    <InputGroup mt={"5px"}>
                       <Input
                         type='text'
                         placeholder='00'
@@ -357,38 +266,24 @@ export const FormikForm = () => {
               </Box>
               <Box display={"grid"} gridTemplateColumns={"49% 49%"} gap={"2%"}>
                 <Box>
-                  <InputGroup mt={"15px"}>
-                    <InputLeftAddon children='Base Price' bg={"none"} />
-                    <Input
-                      type='number'
-                      name='basePrice'
-                      placeholder='0000'
-                      disabled={formik.values.taxType === "Inclusive"}
-                      value={formik.values.basePrice}
-                      onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
-                      textAlign={"center"}
-                    />
-                  </InputGroup>
+                  <InputComp
+                    mt={"15px"}
+                    formik={formik}
+                    name={"basePrice"}
+                    placeholder={"0000"}
+                    disabled={formik.values.taxType === "Inclusive"}
+                    value={formik.values.basePrice}
+                    children='Base Price'></InputComp>
                 </Box>
                 <Box>
-                  <InputGroup mt={"15px"}>
-                    <InputLeftAddon children='Final Price' bg={"none"} />
-                    <Input
-                      type='text'
-                      name='finalPrice'
-                      placeholder='0000'
-                      textAlign={"center"}
-                      disabled={formik.values.taxType === "Exclusive"}
-                      value={
-                        formik.values.finalPrice !== ""
-                          ? formik.values.finalPrice
-                          : ""
-                      }
-                      onBlur={formik.handleBlur}
-                      onChange={formik.handleChange}
-                    />
-                  </InputGroup>
+                  <InputComp
+                    mt={"15px"}
+                    formik={formik}
+                    name={"finalPrice"}
+                    placeholder={"0000"}
+                    disabled={formik.values.taxType === "Exclusive"}
+                    value={formik.values.finalPrice}
+                    children='Final Price'></InputComp>
                 </Box>
               </Box>
             </Box>

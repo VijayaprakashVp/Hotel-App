@@ -12,16 +12,18 @@ export const InputComp = (props) => {
           <InputLeftAddon children={props.keys} bg={"none"} />
           <Input type='text' placeholder={props.values} />
         </InputGroup> */}
-        <InputGroup>
+        <InputGroup mt={props.mt}>
           <InputLeftAddon children={props.children} bg={"none"} />
           <Input
             type='text'
-            name={props.inputname}
+            name={props.name}
             backgroundColor={"none"}
+            placeholder={props.placeholder}
             textAlign={"center"}
-            value={props.inputvalue}
-            onBlur={formik.handleBlur}
-            onChange={formik.handleChange}
+            disabled={props.disabled}
+            value={props.value}
+            onBlur={props.formik.handleBlur}
+            onChange={props.formik.handleChange}
           />
         </InputGroup>
       </Stack>
