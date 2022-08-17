@@ -2,13 +2,15 @@ import {
   Box,
   Button,
   Container,
+  FormControl,
+  FormErrorMessage,
   Input,
   InputGroup,
   InputLeftAddon,
   Select,
-  Text,
 } from "@chakra-ui/react";
-import React from "react";
+
+import React, { useState } from "react";
 import { useEffect } from "react";
 import { HeadingText } from "./HeadingText";
 import { useFormik } from "formik";
@@ -17,6 +19,8 @@ import { InputComp } from "./InputComp";
 import * as reducer from "../Redux/Actions/index";
 import { useDispatch } from "react-redux";
 import { SelectInput } from "./SelectInput";
+import { Variant } from "./Variant";
+import { CloseIcon } from "@chakra-ui/icons";
 
 export const FormikForm = () => {
   var GSTPercentageArray = ["0%", "5%", "8%", " 18%", "28%"];
@@ -36,17 +40,19 @@ export const FormikForm = () => {
     validationSchema: Yup.object({
       itemName: Yup.string()
         .max(15, "Item name should be 15 or less characters")
-        .required("required"),
+        .required("Item Name is required"),
       quantity: Yup.number()
         .moreThan(0, "Please Enter 1 or More Quantity")
-        .required("required"),
-      taxType: Yup.string().required("required"),
+        .required("Quantity is required"),
+      taxType: Yup.string().required("Place Select the Tax Type"),
       basePrice: Yup.number().moreThan(0, "Please Enter the Base Price"),
     }),
   });
 
   const { postFetch } = reducer;
   const dispatch = useDispatch();
+  const [variant, setVariant] = useState([[]]);
+  // console.log("variant:", variant);
 
   function Calculate() {
     let sgst;
@@ -98,17 +104,225 @@ export const FormikForm = () => {
   )
     flag = 1;
 
+  const handleVariant = () => {
+    let addVariant = [...variant, []];
+    setVariant(addVariant);
+  };
+
+  const handleRemoveVariant = (id) => {
+    // console.log("id:", id);
+    let removeVariant = [...variant];
+    removeVariant.splice(id, 1);
+    setVariant(removeVariant);
+  };
+
   useEffect(() => {
     if (
       formik.values.taxType === "Exclusive" ||
       formik.values.taxType === "Inclusive"
-    )
+    ) {
       Calculate();
+    }
   }, [flag, formik.values, formik.values.basePrice, formik.values.finalPrice]);
+
+  // const [input, setInput] = useState("");
+
+  // const handleInputChange = (e) => setInput(e.target.value);
+
+  // const isError = formik.errors === true;
 
   return (
     <>
       <Container maxWidth={"5xl"}>
+        <Box paddingLeft={"2%"} paddingRight={"10%"} h={"700px"}>
+          <Box textAlign={"center"}>
+            <HeadingText
+              weight={"400"}
+              title='Master rate card form'
+              size='32px'></HeadingText>
+          </Box>
+          <Box display={"grid"} gridTemplateColumns={"49%"}>
+            <HeadingText
+              title='Item details'
+              size='24px'
+              weight={"400"}></HeadingText>
+            <FormControl
+              isInvalid={formik.errors.itemName && formik.touched.itemName}>
+              <InputComp
+                name={"itemName"}
+                value={formik.values.itemName}
+                formik={formik}
+                children='Item name'></InputComp>
+              {formik.touched.itemName && formik.errors.itemName && (
+                <FormErrorMessage>{formik.errors.itemName}</FormErrorMessage>
+              )}
+            </FormControl>
+          </Box>
+          <Box display={"grid"} gridTemplateColumns={"49% 49%"} gap={"2%"}>
+            <Box mt={"2.5%"}>
+              <SelectInput
+                keys={"Category"}
+                placeholder={"--"}
+                formik={formik}
+                name={"category"}
+                arr={["Food", "Stationary"]}></SelectInput>
+            </Box>
+            <Box mt={"2.5%"}>
+              <SelectInput
+                keys={"Sub category"}
+                placeholder={"--"}
+                formik={formik}
+                name={"subCategory"}
+                arr={["Snack", "Pencil"]}></SelectInput>
+            </Box>
+            <Box mt={"2.5%"} display={"flex"} gap={"2%"}>
+              <InputGroup>
+                <InputLeftAddon children='Units' bg={"none"} />
+                <Select
+                  placeholder='Kgs'
+                  borderTopLeftRadius={"0px"}
+                  borderBottomLeftRadius={"0px"}></Select>
+              </InputGroup>
+              <InputComp
+                formik={formik}
+                placeholder={"0000"}
+                children='Net wt.'></InputComp>
+            </Box>
+            <Box mt={"2.5%"}>
+              <FormControl
+                isInvalid={formik.errors.quantity && formik.touched.quantity}>
+                <InputComp
+                  formik={formik}
+                  name={"quantity"}
+                  placeholder={"00000"}
+                  value={formik.values.quantity}
+                  children='Max order Quantity'></InputComp>
+                {formik.touched.quantity && formik.errors.quantity && (
+                  <FormErrorMessage>{formik.errors.quantity}</FormErrorMessage>
+                )}
+              </FormControl>
+            </Box>
+          </Box>
+          <Box mt={"15px"}>
+            <HeadingText
+              title='Pricing details'
+              size='24px'
+              weight={"400"}></HeadingText>
+          </Box>
+          <Box>
+            <Box mt={"15px"} fontWeight={"bold"}>
+              Taxes
+            </Box>
+            <Box mt={"10px"} display={"grid"} gridTemplateColumns={"34.5%"}>
+              <FormControl
+                isInvalid={formik.errors.taxType && formik.touched.taxType}>
+                <SelectInput
+                  keys={"Tax type"}
+                  placeholder={"Select"}
+                  value={formik.values.taxType}
+                  formik={formik}
+                  name={"taxType"}
+                  arr={["Inclusive", "Exclusive", "Exempted"]}></SelectInput>
+                {formik.touched.taxType && formik.errors.taxType && (
+                  <FormErrorMessage>{formik.errors.taxType}</FormErrorMessage>
+                )}
+              </FormControl>
+            </Box>
+          </Box>
+          <Box mt={"10px"} display={"grid"} gridTemplateColumns={"49%"}>
+            <Box fontWeight={"bold"} fontSize={"14px"}>
+              Code
+            </Box>
+            {formik.values.taxType !== "Exempted" && (
+              <Box display={"grid"} gridTemplateColumns={"70% 25%"} gap={"5%"}>
+                <Box>
+                  <SelectInput
+                    keys={"SGST"}
+                    placeholder={"--"}
+                    formik={formik}
+                    value={formik.values.sgst}
+                    name={"sgst"}
+                    arr={GSTPercentageArray}></SelectInput>
+                  <SelectInput
+                    keys={"CGST"}
+                    placeholder={"--"}
+                    formik={formik}
+                    value={formik.values.cgst}
+                    name={"cgst"}
+                    arr={GSTPercentageArray}></SelectInput>
+                </Box>
+                <Box mt={"5px"}>
+                  <Box>
+                    <InputGroup>
+                      <Input
+                        type='text'
+                        placeholder='00'
+                        textAlign={"center"}
+                        value={formik.values.sgst !== "" && formik.values.sgst}
+                      />
+                    </InputGroup>
+                    <InputGroup mt={"5px"}>
+                      <Input
+                        type='text'
+                        placeholder='00'
+                        textAlign={"center"}
+                        value={formik.values.cgst !== "" && formik.values.cgst}
+                      />
+                    </InputGroup>
+                  </Box>
+                </Box>
+              </Box>
+            )}
+          </Box>
+          <Box>
+            <Box mt={"15px"} fontWeight={"bold"}>
+              Variants (if any)
+            </Box>
+            {variant.map((vari, index) => (
+              <Box display={"flex"} key={index}>
+                <Variant formik={formik} />
+                {variant.length > 1 && (
+                  <CloseIcon
+                    border={"1px solid red"}
+                    p={"15px"}
+                    fontSize={"40px"}
+                    color={"red"}
+                    cursor={"pointer"}
+                    borderRadius={"40%"}
+                    onClick={() => handleRemoveVariant(index)}
+                    mt={"1.7%"}
+                    ml={"1%"}
+                  />
+                )}
+              </Box>
+            ))}
+          </Box>
+          <Box mt={"10px"} w='99%' display='flex' justifyContent='flex-end'>
+            <Button
+              fontFamily='DM Sans'
+              fontWeight='700'
+              fontSize='12px'
+              width='90px'
+              bg={"none"}
+              color='#18B83B'
+              onClick={handleVariant}
+              border='1px solid #18B83B'>
+              Add variant
+            </Button>
+          </Box>
+          <Box w='100%' display='flex' justifyContent='flex-end' mt='20px'>
+            <Button
+              bgColor='#18B83B'
+              color={"white"}
+              width='20%'
+              onClick={() => dispatch(postFetch(formik.values))}>
+              Save item
+            </Button>
+          </Box>
+        </Box>
+      </Container>
+      <br />
+      {/* <Container maxWidth={"5xl"}>
         <Box paddingLeft={"2%"} paddingRight={"10%"} h={"700px"}>
           <Box textAlign={"center"}>
             <HeadingText
@@ -126,12 +340,10 @@ export const FormikForm = () => {
               value={formik.values.itemName}
               formik={formik}
               children='Item name'></InputComp>
-            {formik.touched.itemName && formik.errors.itemName ? (
+            {formik.touched.itemName && formik.errors.itemName && (
               <Text color={"red"} ml={"45%"}>
                 {formik.errors.itemName}
               </Text>
-            ) : (
-              ""
             )}
           </Box>
           <Box display={"grid"} gridTemplateColumns={"49% 49%"} gap={"2%"}>
@@ -171,12 +383,10 @@ export const FormikForm = () => {
                 placeholder={"00000"}
                 value={formik.values.quantity}
                 children='Max order Quantity'></InputComp>
-              {formik.touched.quantity && formik.errors.quantity ? (
+              {formik.touched.quantity && formik.errors.quantity && (
                 <Text color={"red"} ml={"45%"}>
                   {formik.errors.quantity}
                 </Text>
-              ) : (
-                ""
               )}
             </Box>
           </Box>
@@ -198,12 +408,10 @@ export const FormikForm = () => {
                 formik={formik}
                 name={"taxType"}
                 arr={["Inclusive", "Exclusive", "Exempted"]}></SelectInput>
-              {formik.touched.taxType && formik.errors.taxType ? (
+              {formik.touched.taxType && formik.errors.taxType && (
                 <Text color={"red"} ml={"45%"}>
                   {formik.errors.taxType}
                 </Text>
-              ) : (
-                ""
               )}
             </Box>
           </Box>
@@ -211,7 +419,7 @@ export const FormikForm = () => {
             <Box fontWeight={"bold"} fontSize={"14px"}>
               Code
             </Box>
-            {formik.values.taxType !== "Exempted" ? (
+            {formik.values.taxType !== "Exempted" && (
               <Box display={"grid"} gridTemplateColumns={"70% 25%"} gap={"5%"}>
                 <Box>
                   <SelectInput
@@ -236,9 +444,7 @@ export const FormikForm = () => {
                         type='text'
                         placeholder='00'
                         textAlign={"center"}
-                        value={
-                          formik.values.sgst !== "" ? formik.values.sgst : ""
-                        }
+                        value={formik.values.sgst !== "" && formik.values.sgst}
                       />
                     </InputGroup>
                     <InputGroup mt={"5px"}>
@@ -246,56 +452,36 @@ export const FormikForm = () => {
                         type='text'
                         placeholder='00'
                         textAlign={"center"}
-                        value={
-                          formik.values.cgst !== "" ? formik.values.cgst : ""
-                        }
+                        value={formik.values.cgst !== "" && formik.values.cgst}
                       />
                     </InputGroup>
                   </Box>
                 </Box>
               </Box>
-            ) : (
-              ""
             )}
           </Box>
           <Box>
             <Box mt={"15px"} fontWeight={"bold"}>
               Variants (if any)
             </Box>
-            <Box display={"grid"} gridTemplateColumns={"49% 49%"} gap={"1%"}>
-              <Box>
-                <InputGroup mt={"15px"}>
-                  <InputLeftAddon children='Variant' bg={"none"} />
-                  <Select
-                    textAlign={"center"}
-                    placeholder='--'
-                    borderTopLeftRadius={"0px"}
-                    borderBottomLeftRadius={"0px"}></Select>
-                </InputGroup>
+            {variant.map((vari, index) => (
+              <Box display={"flex"} key={index}>
+                <Variant formik={formik} />
+                {variant.length > 1 && (
+                  <CloseIcon
+                    border={"1px solid red"}
+                    p={"15px"}
+                    fontSize={"40px"}
+                    color={"red"}
+                    cursor={"pointer"}
+                    borderRadius={"40%"}
+                    onClick={() => handleRemoveVariant(index)}
+                    mt={"1.7%"}
+                    ml={"1%"}
+                  />
+                )}
               </Box>
-              <Box display={"grid"} gridTemplateColumns={"49% 49%"} gap={"2%"}>
-                <Box>
-                  <InputComp
-                    mt={"15px"}
-                    formik={formik}
-                    name={"basePrice"}
-                    placeholder={"0000"}
-                    disabled={formik.values.taxType === "Inclusive"}
-                    value={formik.values.basePrice}
-                    children='Base Price'></InputComp>
-                </Box>
-                <Box>
-                  <InputComp
-                    mt={"15px"}
-                    formik={formik}
-                    name={"finalPrice"}
-                    placeholder={"0000"}
-                    disabled={formik.values.taxType === "Exclusive"}
-                    value={formik.values.finalPrice}
-                    children='Final Price'></InputComp>
-                </Box>
-              </Box>
-            </Box>
+            ))}
           </Box>
           <Box mt={"10px"} w='99%' display='flex' justifyContent='flex-end'>
             <Button
@@ -305,6 +491,7 @@ export const FormikForm = () => {
               width='90px'
               bg={"none"}
               color='#18B83B'
+              onClick={handleVariant}
               border='1px solid #18B83B'>
               Add variant
             </Button>
@@ -319,7 +506,7 @@ export const FormikForm = () => {
             </Button>
           </Box>
         </Box>
-      </Container>
+      </Container> */}
     </>
   );
 };
