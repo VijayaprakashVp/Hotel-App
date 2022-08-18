@@ -4,6 +4,10 @@ import { InputComp } from "./InputComp";
 
 export const Variant = (props) => {
   var formik = props.formik;
+  let formatPath = formik.values.allVariants;
+  let currentValue = formatPath[`${props.id}`];
+  let variantArray = props.variantArray;
+
   return (
     <Box display={"grid"} gridTemplateColumns={"49% 49%"} gap={"1%"}>
       <Box>
@@ -21,20 +25,20 @@ export const Variant = (props) => {
           <InputComp
             mt={"15px"}
             formik={formik}
-            name={"basePrice"}
+            name={`allVariants.${props.id}.basePrice`}
             placeholder={"0000"}
             disabled={formik.values.taxType === "Inclusive"}
-            value={formik.values.basePrice}
+            value={currentValue.basePrice}
             children='Base Price'></InputComp>
         </Box>
         <Box>
           <InputComp
             mt={"15px"}
             formik={formik}
-            name={"finalPrice"}
+            name={`allVariants.${props.id}.finalPrice`}
             placeholder={"0000"}
             disabled={formik.values.taxType === "Exclusive"}
-            value={formik.values.finalPrice}
+            value={currentValue.finalPrice}
             children='Final Price'></InputComp>
         </Box>
       </Box>
